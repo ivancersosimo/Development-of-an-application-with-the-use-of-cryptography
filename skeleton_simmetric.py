@@ -9,8 +9,6 @@ import pyminizip as pyzip
 from optparse import OptionParser
 
 
-
-
 def gen_symk(randomness):
     #generate key
     return symk
@@ -28,11 +26,18 @@ def encode(binary_data):
     return base64.b64encode(binary_data)
 
 def saveout(ciphertext, key, extra=None):
+
     compression = 8
     password = input('Type a password to protect your files\n')
-    open("/tmp/ctext", "w")
-    open("/tmp/key", "w")
-    open("/tmp/extra", "w")
+    with open("/tmp/ctext", "wb") as ctext:
+        ctext.write(ciphertext)
+        ctext.close
+    with open("/tmp/key", "w") as fkey:
+        fkey.write("bb")
+        fkey.close
+    with open("/tmp/extra", "w") as fextra:
+        fextra.write("cc")
+        fextra.close
     # tmp filename, buffer, name of zip, password, compression level
     pyzip.compress("/tmp/ctext",ciphertext, "ciphertext.zip", "", compression)
     pyzip.compress("/tmp/key", key, "key.zip", password, compression)
@@ -61,9 +66,7 @@ def main():
 
     if len(sys.argv) < 2:
         print (sys.argv[0], " --help to see the options")
-        
     
-
     parser = OptionParser()
     parser.add_option("-f", "--file", dest="filename", help="Input file to encrypt or decrypt", metavar="FILE")
     parser.add_option("-k", "--key", dest="key", help="Input key file", metavar="KEY")
@@ -82,6 +85,8 @@ def main():
         encoded_v = []
         for e in enc_v:
             encoded_v.append(encode(e))
-            saveout(encoded_v[0], encoded_v[1], encoded_v[2])
+            #saveout(encoded_v[0], encoded_v[1], encoded_v[2])
+        
+        saveout(encoded_v[0],encoded_v[1],encoded_v[2])
 
 main()
