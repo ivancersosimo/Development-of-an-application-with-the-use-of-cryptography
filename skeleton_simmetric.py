@@ -42,6 +42,7 @@ def saveout(ciphertext, key, extra=None):
     pyzip.compress("/tmp/ctext",ciphertext, "ciphertext.zip", "", compression)
     pyzip.compress("/tmp/key", key, "key.zip", password, compression)
     pyzip.compress("/tmp/extra",extra, "extra_cipher.zip", password, compression)
+    
     return
 
 
