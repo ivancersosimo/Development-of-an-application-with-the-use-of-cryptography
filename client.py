@@ -5,7 +5,9 @@ class client:
         self.password = password
         self.existance = False
 
-    
+    def setExistance(self):
+        self.existance = True
+        
     def askInformation(self, data):
         encryptedData = symmetric_enc(data)
         hashData = hash(data)
