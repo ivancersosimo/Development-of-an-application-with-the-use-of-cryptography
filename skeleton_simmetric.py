@@ -10,7 +10,7 @@ from optparse import OptionParser
 
 
 def gen_symk(randomness):
-    #generate key
+    symk = get_random_bytes(randomness)
     return symk
 
 def gen_asymkpair(randomness):
@@ -49,7 +49,7 @@ def saveout(ciphertext, key, extra=None):
 
 def symmetric_enc(data):
     # use a library for symmetric encryption
-    key = get_random_bytes(16) # save the key or get lost
+    key = gen_symk(16) # save the key or get lost
     cipher = AES.new(key, AES.MODE_EAX)
     ciphertext, tag = cipher.encrypt_and_digest(data)
     out = []
@@ -57,7 +57,6 @@ def symmetric_enc(data):
     out.append(key)
     out.append(tag)
     return out # save the tag or get lost
-
 
 
     
