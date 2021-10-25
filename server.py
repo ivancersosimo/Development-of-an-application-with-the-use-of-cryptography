@@ -13,7 +13,9 @@ class server:
         serverOutput.append(hashData)
         return serverOutput
 
-    def searchInformation(self, data):
+    def searchInformation(self, dataEncrypted):
+        #Function to search the information in the different databases, from an encrypted data.
+        data = symmetric_dec(dataEncrypted)
         fileName = data[0] + ".json"
         with open(fileName,'rb') as f:
             if f == -1:
