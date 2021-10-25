@@ -18,9 +18,9 @@ username = input("Introduce username: ")
 password = input("Introduce password: ")
 Client = client(username, password)
 Server = server()
-Channel = channel(server, client)
-login = channel.checkUserExistance()
-#login = True
+Channel = channel(Server, Client)
+#login = Channel.checkUserExistance()
+login = True
 
 #The user doesn't exist in the database, add user or close the application
 if (login==False):

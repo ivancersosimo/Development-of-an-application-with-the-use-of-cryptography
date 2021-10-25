@@ -1,4 +1,4 @@
-from skeleton_simmetric import symmetric_enc
+from encryption_functions import symmetric_enc
 class client:
     def __init__(self,username,password):
         self.username = username
@@ -17,6 +17,6 @@ class client:
         clientOutput.append(hashData)
         return clientOutput
     
-    def checkUserExistance(self):
-        data = ["users", self.username, self.password]
+    def checkUser(self):
+        data = ["users", self.username, [self.username, self.password]]
         return data

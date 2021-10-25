@@ -17,14 +17,14 @@ class channel:
         return clientInput
 
     def checkUserExistance(self):
-        data = self.client.checkUserExistance()
+        data = self.client.checkUser()
         serverInput = self.clientToServer(data)
         login = self.server.searchInformation(serverInput)
         self.client.setExistance(login)
         return login
 
     def addUser(self):
-        clientInformation = self.client.checkUserExistance()
+        clientInformation = self.client.checkUser()
         serverInput = self.clientToServer(clientInformation)
         self.server.storeInformation(serverInput, existent = False)
         self.client.setExistance(True)

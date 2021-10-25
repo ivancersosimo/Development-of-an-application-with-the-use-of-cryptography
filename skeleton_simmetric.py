@@ -45,6 +45,8 @@ def saveout(ciphertext, key, extra=None):
     
     return
 
+def symmetric_dec(data):
+    pass
 
 
 def symmetric_enc(data):
