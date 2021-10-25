@@ -7,10 +7,10 @@ from Crypto.Random import get_random_bytes
 import base64
 import pyminizip as pyzip
 from optparse import OptionParser
-
+from Crypto.Hash import HMAC, SHA256
 
 def gen_symk(randomness):
-    #generate key
+    symk = get_random_bytes(randomness)
     return symk
 
 def gen_asymkpair(randomness):
@@ -49,7 +49,7 @@ def saveout(ciphertext, key, extra=None):
 
 def symmetric_enc(data):
     # use a library for symmetric encryption
-    key = get_random_bytes(16) # save the key or get lost
+    key = gen_symk(16) # save the key or get lost
     cipher = AES.new(key, AES.MODE_EAX)
     ciphertext, tag = cipher.encrypt_and_digest(data)
     out = []
@@ -59,12 +59,19 @@ def symmetric_enc(data):
     return out # save the tag or get lost
 
 
+def verifyMessege(Hash, key, msg):
+    try:
+        Hash.hexverify(msg)
+        print("The message '%s' is authentic" % msg)
+    except ValueError:
+        print("The message or the key is wrong")
+
+def createHmac(key):
+    return HMAC.new(key, digestmod=SHA256)
 
     
-
-
 def main():
-
+    
     if len(sys.argv) < 2:
         print (sys.argv[0], " --help to see the options")
     
@@ -89,5 +96,13 @@ def main():
             #saveout(encoded_v[0], encoded_v[1], encoded_v[2])
         
         saveout(encoded_v[0],encoded_v[1],encoded_v[2])
+
+    """ ejemplo de hmac funcionando
+    key = b"keyexampale"
+    msg = b"hola"
+    h = createHmac(key)
+    h.update(msg)
+    verifyMessege(h, key, h.hexdigest());
+    """
 
 main()
