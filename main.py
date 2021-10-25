@@ -1,6 +1,6 @@
-import client
-import channel
-import server
+from client import client
+from channel import channel
+from server import server
 
 def performNewAction(login):
     newAction = input("Do you want to perform a new action? (Y/n)")
@@ -16,17 +16,18 @@ def performNewAction(login):
 
 username = input("Introduce username: ")
 password = input("Introduce password: ")
-client = client(username, password)
-server = server()
-channel = channel(server, client)
-login = channel.checkUserExistance()
+Client = client(username, password)
+Server = server()
+Channel = channel(Server, Client)
+#login = Channel.checkUserExistance()
+login = True
 
 #The user doesn't exist in the database, add user or close the application
 if (login==False):
     print("User is not in the database")
     add = input("Do you want to create an account? (Y/n)")
     if add == "Y":
-        channel.addUser()
+        Channel.addUser()
     elif add =="n":
         print("App closing...")
     else:
@@ -44,26 +45,35 @@ while login == True:
         print("delacc : delete account from the database") #Yet to be implemented
         print("logout : logout and close the application")
     elif action == "search":
-        channel.search()
+        Channel.search()
         login = performNewAction()
     elif action == "send":
-        channel.send()
+        usernameReceiver = input("Include the username of the receiver: ")
+        Channel2 = channel(Server, Client, usernameReceiver)
+        Channel.send()
         login = performNewAction()
     elif action == "add":
-        channel.add()
+        inp = input("Database to access: ")
+        user = input("Username to add: ")
+        passw = input("Password to add: ")
+        data = [inp, user, passw]
+        Channel.addItem(data)
         login = performNewAction()
     elif action == "update":
-        channel.update()
+        Channel.update()
         login = performNewAction()
     elif action == "delit":
-        channel.deleteItem()
+        Channel.deleteItem()
         login = performNewAction()
     elif action == "delacc":
-        channel.deleteAccount()
+        Channel.deleteAccount()
         login = performNewAction()
     elif action == "logout":
         login = False
         print("Closing the application...")
+    elif action == "adminOptionSetNewKey":
+        print("Welcome, creator")
+        Server.storeNewKey()
     else:
         print("Not recognized option")
 

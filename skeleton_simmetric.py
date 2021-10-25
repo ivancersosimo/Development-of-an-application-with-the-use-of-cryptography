@@ -45,6 +45,8 @@ def saveout(ciphertext, key, extra=None):
     
     return
 
+def symmetric_dec(data):
+    pass
 
 
 def symmetric_enc(data):
@@ -68,41 +70,3 @@ def verifyMessege(Hash, key, msg):
 
 def createHmac(key):
     return HMAC.new(key, digestmod=SHA256)
-
-    
-def main():
-    
-    if len(sys.argv) < 2:
-        print (sys.argv[0], " --help to see the options")
-    
-    parser = OptionParser()
-    parser.add_option("-f", "--file", dest="filename", help="Input file to encrypt or decrypt", metavar="FILE")
-    parser.add_option("-k", "--key", dest="key", help="Input key file", metavar="KEY")
-    parser.add_option("-e", "--extra", dest="extra", help="Input key file", metavar="EXTRA")
-    parser.add_option("-d", "--decrypt", dest="decrypt", default=False, help="Decrypt a file")
-
-    (options, args) = parser.parse_args()
-
-    if (options.decrypt):
-        key = options.key
-        extra = options.extra
-        fname = options.filename
-    else:
-        cleartext = open(options.filename, "rb").read() # the file name or string that you pass through the command line
-        enc_v = symmetric_enc(cleartext)
-        encoded_v = []
-        for e in enc_v:
-            encoded_v.append(encode(e))
-            #saveout(encoded_v[0], encoded_v[1], encoded_v[2])
-        
-        saveout(encoded_v[0],encoded_v[1],encoded_v[2])
-
-    """ ejemplo de hmac funcionando
-    key = b"keyexampale"
-    msg = b"hola"
-    h = createHmac(key)
-    h.update(msg)
-    verifyMessege(h, key, h.hexdigest());
-    """
-
-main()

@@ -1,21 +1,18 @@
-from skeleton_simmetric import symmetric_enc
+from encryption_functions import symmetric_enc
 class client:
     def __init__(self,username,password):
         self.username = username
         self.password = password
         self.existance = False
 
-    def setExistance(self):
-        self.existance = True
+    def setExistance(self, existance):
+        self.existance = existance
         
     def askInformation(self, data):
-        encryptedData = symmetric_enc(data)
-        hashData = hash(data)
-        clientOutput = []
-        clientOutput.append(encryptedData)
-        clientOutput.append(hashData)
-        return clientOutput
+        newData = [data[0],self.username,[data[1],data[2]]]
+        encryptedData = symmetric_enc(newData)
+        return encryptedData
     
-    def checkUserExistance(self):
-        data = ["users", self.username, self.password]
+    def checkUser(self):
+        data = ["users", self.username, [self.username, self.password]]
         return data
