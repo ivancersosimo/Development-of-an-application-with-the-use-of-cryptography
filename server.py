@@ -1,19 +1,16 @@
-from skeleton_simmetric import symmetric_enc
-from skeleton_simmetric import gen_symk
+from encryption_functions import symmetric_enc
+from encryption_functions import gen_symk
+from encryption_functions import symmetric_dec
 import json
 class server:
     def __init__(self):
-        self.databaseDecryptKey = open("databaseKey.key","rb").open()
+        self.databaseDecryptKey = open("databaseKey.key","rb")
 
     def sendInformation(self,data):
         encryptedData = symmetric_enc(data)
-        hashData = hash(data)
-        serverOutput = []
-        serverOutput.append(encryptedData)
-        serverOutput.append(hashData)
-        return serverOutput
+        return encryptedData
 
-    def searchInformation(self, dataEncrypted):
+    def searchInformation(self, dataEncrypted): #Change everything
         #Function to search the information in the different databases, from an encrypted data.
         data = symmetric_dec(dataEncrypted)
         fileName = data[0] + ".json"
@@ -36,7 +33,8 @@ class server:
                         return -1
                         
 
-    def storeInformation(self,data):
+    def storeInformation(self, dataEncrypted, existent):
+        data = symmetric_dec(dataEncrypted)
         fileName = data[0] + ".json"
         with open(fileName,'rb') as f:
             if f == -1:
@@ -44,12 +42,12 @@ class server:
             else:
                 database = json.load(f)
                 f.close()
-                database.update({data[1]:data[2]})
+                database.update({data[1]: data[2]})
                 with open(fileName,'wb') as f:
                     if f == -1:
                         print("File could not be opened")
                     else:
-                        f.write(database)
+                        json.dump(database,f)
 
         
     def storeNewKey(self): 
