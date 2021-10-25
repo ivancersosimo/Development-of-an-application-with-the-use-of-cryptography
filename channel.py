@@ -1,9 +1,5 @@
 class channel:
-    def __init__(self, server, client):
-        self.server = server
-        self.client = client
-    
-    def __init__(self, server, client, client2Username):
+    def __init__(self, server, client, client2Username = None):
         self.server = server
         self.client = client
         self.clientReceiverUsername = client2Username

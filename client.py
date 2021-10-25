@@ -9,6 +9,7 @@ class client:
         self.existance = existance
         
     def askInformation(self, data):
+        data.append(self.username)
         encryptedData = symmetric_enc(data)
         hashData = hash(data)
         clientOutput = []

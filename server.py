@@ -1,10 +1,11 @@
 from skeleton_simmetric import symmetric_enc
 from skeleton_simmetric import gen_symk
-from skeleton_simmetric import symmetric_dec
+#from skeleton_simmetric import symmetric_dec
 import json
 class server:
     def __init__(self):
-        self.databaseDecryptKey = open("databaseKey.key","rb").open()
+        #self.databaseDecryptKey = open("databaseKey.key","rb").open()
+        pass
 
     def sendInformation(self,data):
         encryptedData = symmetric_enc(data)
@@ -16,7 +17,7 @@ class server:
 
     def searchInformation(self, dataEncrypted):
         #Function to search the information in the different databases, from an encrypted data.
-        data = symmetric_dec(dataEncrypted)
+        #data = symmetric_dec(dataEncrypted)
         fileName = data[0] + ".json"
         with open(fileName,'rb') as f:
             if f == -1:
