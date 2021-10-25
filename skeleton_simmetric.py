@@ -58,6 +58,7 @@ def symmetric_enc(data):
     out.append(tag)
     return out # save the tag or get lost
 
+
 def verifyMessege(Hash, key, msg):
     try:
         Hash.hexverify(msg)
@@ -95,6 +96,7 @@ def main():
             #saveout(encoded_v[0], encoded_v[1], encoded_v[2])
         
         saveout(encoded_v[0],encoded_v[1],encoded_v[2])
+
     """ ejemplo de hmac funcionando
     key = b"keyexampale"
     msg = b"hola"
