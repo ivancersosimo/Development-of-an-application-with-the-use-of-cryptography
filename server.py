@@ -1,10 +1,10 @@
 from skeleton_simmetric import symmetric_enc
 from skeleton_simmetric import gen_symk
-#from skeleton_simmetric import symmetric_dec
+from skeleton_simmetric import symmetric_dec
 import json
 class server:
     def __init__(self):
-        #self.databaseDecryptKey = open("databaseKey.key","rb").open()
+        self.databaseDecryptKey = open("databaseKey.key","rb").open()
         pass
 
     def sendInformation(self,data):
