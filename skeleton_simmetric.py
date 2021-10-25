@@ -60,6 +60,7 @@ def symmetric_enc(data):
     out.append(tag)
     return out # save the tag or get lost
 
+
 def verifyMessege(Hash, key, msg):
     try:
         Hash.hexverify(msg)
