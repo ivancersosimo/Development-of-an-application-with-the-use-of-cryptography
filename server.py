@@ -1,5 +1,6 @@
 from skeleton_simmetric import symmetric_enc
 from skeleton_simmetric import gen_symk
+from skeleton_simmetric import symmetric_dec
 import json
 class server:
     def __init__(self):
@@ -36,7 +37,7 @@ class server:
                         return -1
                         
 
-    def storeInformation(self,data):
+    def storeInformation(self, data, existent):
         fileName = data[0] + ".json"
         with open(fileName,'rb') as f:
             if f == -1:

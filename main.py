@@ -47,10 +47,12 @@ while login == True:
         channel.search()
         login = performNewAction()
     elif action == "send":
+        usernameReceiver = input("Include the username of the receiver: ")
+        channel2 = channel(server, client, usernameReceiver)
         channel.send()
         login = performNewAction()
     elif action == "add":
-        channel.add()
+        channel.addItem()
         login = performNewAction()
     elif action == "update":
         channel.update()
