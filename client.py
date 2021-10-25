@@ -18,5 +18,4 @@ class client:
     
     def checkUserExistance(self):
         data = ["users", self.username, self.password]
-        clientOutput = self.askInformation(data)
-        return clientOutput
+        return data
