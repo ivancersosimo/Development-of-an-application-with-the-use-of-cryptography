@@ -34,6 +34,7 @@ class channel:
         pass
 
     def addItem(self,data):
+        data = str(data).encode("utf-8")
         serverInput = self.clientToServer(data)
         self.server.storeInformation(serverInput, existent = False)
 

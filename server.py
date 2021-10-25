@@ -2,6 +2,8 @@ from encryption_functions import symmetric_enc
 from encryption_functions import gen_symk
 from encryption_functions import symmetric_dec
 import json
+import ast
+
 class server:
     def __init__(self):
         self.databaseDecryptKey = open("databaseKey.key","rb")
@@ -35,7 +37,7 @@ class server:
 
     def storeInformation(self, dataEncrypted, existent):
         data = symmetric_dec(dataEncrypted)
-        fileName = data[0] + ".json"
+        fileName ="users.json"
         with open(fileName,'rb') as f:
             if f == -1:
                 print("File could not be opened") 
@@ -43,7 +45,7 @@ class server:
                 database = json.load(f)
                 f.close()
                 database.update({data[1]: data[2]})
-                with open(fileName,'wb') as f:
+                with open(fileName,'w') as f:
                     if f == -1:
                         print("File could not be opened")
                     else:

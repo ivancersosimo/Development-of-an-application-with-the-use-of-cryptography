@@ -3,11 +3,11 @@ from channel import channel
 from server import server
 
 def performNewAction(login):
-    newAction = input("Do you want to perform a new action? (Y/n)")
+    newAction = input("Do you want to perform a new action? (Y/n) \n")
     if newAction != "Y" and newAction !="n":
         while newAction != "Y" or newAction !="n":
             print("Invalid input")
-            newAction = input("Do you want to perform a new action? (Y/n)")
+            newAction = input("Do you want to perform a new action? (Y/n) \n")
         if newAction == "n":
             login = False
             print("Closing the application...")
@@ -53,12 +53,14 @@ while login == True:
         Channel.send()
         login = performNewAction()
     elif action == "add":
+        
         inp = input("Database to access: ")
         user = input("Username to add: ")
         passw = input("Password to add: ")
         data = [inp, user, passw]
         Channel.addItem(data)
-        login = performNewAction()
+        login = performNewAction(login)
+       
     elif action == "update":
         Channel.update()
         login = performNewAction()
