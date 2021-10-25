@@ -53,7 +53,11 @@ while login == True:
         Channel.send()
         login = performNewAction()
     elif action == "add":
-        Channel.addItem()
+        inp = input("Database to access: ")
+        user = input("Username to add: ")
+        passw = input("Password to add: ")
+        data = [inp, user, passw]
+        Channel.addItem(data)
         login = performNewAction()
     elif action == "update":
         Channel.update()
