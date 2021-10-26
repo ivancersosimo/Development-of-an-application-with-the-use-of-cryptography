@@ -62,8 +62,12 @@ while login == True:
         login = performNewAction(login)
        
     elif action == "update":
-        Channel.update()
-        login = performNewAction()
+        inp = input("Database to access: ")
+        user = input("User to update: ")
+        passw = input("New password: ")
+        data = [inp, user, passw]
+        Channel.update(data)
+        """  = performNewAction()"""
     elif action == "delit":
         Channel.deleteItem()
         login = performNewAction()
