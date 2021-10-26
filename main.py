@@ -38,7 +38,7 @@ while login == True:
     if action == "help":
         print("List of options: ")
         print("search : search on the database")
-        print("send : search information on the database and send it to another user")
+        print("send: search information on the database and send it to another user") #Yet to be implemented
         print("add : include a new item in the database")
         print("update : update item in the database")
         print("delit : delete item from the database") #Yet to be implemented
@@ -69,7 +69,11 @@ while login == True:
         Channel.update(data)
         """  = performNewAction()"""
     elif action == "delit":
-        Channel.deleteItem()
+        inp = input("Database to access: ")
+        user = input("User to delete: ")
+        passw = input("Password: ")
+        data =[inp, user, passw]
+        Channel.deleteItem(data)
         login = performNewAction()
     elif action == "delacc":
         Channel.deleteAccount()
