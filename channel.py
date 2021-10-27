@@ -29,9 +29,18 @@ class channel:
         self.server.storeInformation(serverInput, existent = False)
         self.client.setExistance(True)
 
-    def send():
-    #FUNCTION TO BE IMPLEMENTED FOR THE SECOND DELIVERY
-        pass
+    def search(self,databaseName):
+        clientInformation = self.clientToServer(databaseName)
+        serverOutput = self.server.searchInformation(clientInformation)
+        clientInput = self.server.sendInformation(serverOutput)
+        client = self.client.receiveInformation(clientInput)
+        if client:
+            print("List of information retrieved (format: [username, password]): ")
+            if client == -1:
+                print("No information to retrieve")
+            else:
+                print(client)
+            return client
 
     def addItem(self,data):
         serverInput = self.clientToServer(data)
@@ -44,7 +53,3 @@ class channel:
     def deleteItem(self,data):
         serverInput = self.clientToServer(data)
         self.server.deleteItem(serverInput, all = False)
-
-    def deleteAccount(self, data):
-        serverInput = self.clientToServer(data)
-        self.server.deleteItem(serverInput, all = True)
