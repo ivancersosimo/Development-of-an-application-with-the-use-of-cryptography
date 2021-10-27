@@ -31,3 +31,8 @@ def symmetric_dec(dataEncrypted):
     data = cipher.decrypt_and_verify(ciphertext,tag).decode("utf-8")
     data = ast.literal_eval(data)
     return data
+
+def performHash(data):
+    hash_object = SHA256.new(str(data).encode("utf-8"))
+    hash_val = hash_object.hexdigest()
+    return hash_val
