@@ -1,0 +1,4 @@
+﻿Username;KeyPath
+lucia;/keys/client1/client1_publick.pem
+ivan;/keys/client2/client2_publick.pem
+Default;/keys/client3/client3_publick.pem
