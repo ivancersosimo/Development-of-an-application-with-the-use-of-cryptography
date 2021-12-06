@@ -206,7 +206,7 @@ class server:
                                         print("File could not be opened")
                                         return False
                                     else:
-                                        signature = str(signature).decode('utf-8')
+                                        signature = str(signature)
                                         g.write(signature)
         else:
             print("Not able to verify the signature. Aborting operation")
