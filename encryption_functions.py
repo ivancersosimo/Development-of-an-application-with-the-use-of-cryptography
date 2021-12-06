@@ -6,10 +6,7 @@ from Crypto.Hash import HMAC, SHA256
 import ast
 from Crypto.PublicKey import RSA
 import Crypto.IO.PEM as pem
-
-from nacl.encoding import HexEncoder
-from nacl.signing import SigningKey
-from nacl.signing import VerifyKey
+from Crypto.Signature import pkcs1_15
 
 def gen_symk(randomness):
     symk = get_random_bytes(randomness)
@@ -40,54 +37,49 @@ def symmetric_dec(dataEncrypted):
 
 def asymmetric_enc(data,pubkey_path):
     pbk = pem.decode(open(pubkey_path,"r").read(), passphrase="1234".encode('utf-8'))
-    pubkey = RSA.import_key(pbk)
+    pubkey = RSA.import_key(pbk[0])
     cipher_rsa = PKCS1_OAEP.new(pubkey)
-    dataEncrypted = cipher_rsa.encrypt(data)
-    return dataEncrypted
+    data_key = str(data[2]).encode('utf-8')
+    dataEncrypted_key = cipher_rsa.encrypt(data_key)
+    return [data[0],data[1], dataEncrypted_key, data[3]]
     
 def asymmetric_dec(dataEncrypted,privkey_path):
     pvk =pem.decode(open(privkey_path,"r").read(), passphrase="1234".encode('utf-8'))
-    privkey = RSA.import_key(pvk)
+    privkey = RSA.import_key(pvk[0])
     cipher_rsa = PKCS1_OAEP.new(privkey)
-    data = cipher_rsa.decrypt(dataEncrypted)
-    return data
+    dataEncrypted_key = dataEncrypted[2]
+    data = cipher_rsa.decrypt(dataEncrypted_key).decode("utf-8")
+    data = ast.literal_eval(data)
+    return [dataEncrypted[0], dataEncrypted[1], data, dataEncrypted[3]]
 
 def performHash(data):
     hash_object = SHA256.new(str(data).encode("utf-8"))
     hash_val = hash_object.hexdigest()
     return hash_val
 
-def signerPersp(nsMessege):
-    print("# Generate a new random signing key")
-    signing_key = SigningKey.generate()
+def signMessage(dataEncrypted,privk_path, database=False):
+    if database == False:
+        message = dataEncrypted[0] + dataEncrypted[1] + dataEncrypted[2] + dataEncrypted[3]
+    elif database == True:
+        message = str(dataEncrypted).encode("utf-8")
+    pvk = pem.decode(open(privk_path, "r").read(), passphrase = "1234".encode("utf-8"))
+    key = RSA.import_key(pvk[0])
+    h = SHA256.new(message)
+    h.hexdigest()
+    signature = pkcs1_15.new(key).sign(h)
+    return signature
 
-    print("# Sign a message with the signing key")
-    signed_hex = signing_key.sign(nsMessege, encoder=HexEncoder)
-
-    print("# Obtain the verify key for a given signing key")
-    verify_key = signing_key.verify_key
-
-    print("# Serialize the verify key to send it to a third party")
-    verify_key_hex = verify_key.encode(encoder=HexEncoder)
-    output = [signed_hex, verify_key_hex]
-    print(signed_hex)
-
-    return output
-    
-def veryfierPersp(signed_hex, verify_key_hex):
-    print(" # Create a VerifyKey object from a hex serialized public key")
-    verify_key = VerifyKey(verify_key_hex, encoder=HexEncoder)
-    print(signed_hex)
-    print( " # Check the validity of a message's signature # The message and the signature can either be passed together, or # separately if the signature is decoded to raw bytes.  These are equivalent:")
-    verify_key.verify(signed_hex, encoder=HexEncoder)
-    print("here")
-
-    signature_bytes = HexEncoder.decode(signed_hex.signature)
-    verify_key.verify(signed_hex.message, signature_bytes,
-                    encoder=HexEncoder)
-
-    # Alter the signed message text
-    forged = signed_hex[:-1] + bytes([int(signed_hex[-1]) ^ 1])
-    # Will raise nacl.exceptions.BadSignatureError, since the signature check
-    # is failing
-    verify_key.verify(forged)
+def verifySignature(dataEncrypted,signature,pubkey_path,datab = False):
+    if datab==False:
+        message = dataEncrypted[0] + dataEncrypted[1] + dataEncrypted[2] + dataEncrypted[3]
+    elif datab ==True:
+        message = str(dataEncrypted).encode("utf-8")
+    pbk = pem.decode(open(pubkey_path, "r").read(),passphrase = "1234".encode("utf-8"))
+    key = RSA.import_key(pbk[0])
+    h = SHA256.new(message)
+    try:
+        pkcs1_15.new(key).verify(h,signature)
+        verification = True
+    except:
+        return False
+    return verification
