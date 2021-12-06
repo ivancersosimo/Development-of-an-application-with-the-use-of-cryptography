@@ -1,5 +1,6 @@
 from client import client
 from channel import channel
+from pki import pki
 from server import server
 from os import system, name
 from encryption_functions import performHash
@@ -22,13 +23,13 @@ def performNewAction(login=True):
         print("Closing the application...")
     return login
 
-
 username = input("Introduce username: ")
 password = input("Introduce password: ")
 hashPas = performHash(password)
 Client = client(username, hashPas)
 Server = server()
-Channel = channel(Server, Client)
+pki = pki()
+Channel = channel(Server, Client,pki)
 login = Channel.checkUserExistance()
 #The user doesn't exist in the database, add user or close the application
 if (login==False):
@@ -45,7 +46,7 @@ if (login==False):
 elif login == True:
     print("Welcome")
 else:
-    print("Wrong password. App closing...")
+    print("Wrong password or invalid verification. App closing...")
 
 while login == True:
     action = input("Select action to perform (input help for list of options): ")
@@ -70,12 +71,30 @@ while login == True:
         login = performNewAction(login)
         clear()
     elif action == "send":
-        print("Function yet under development")
-        #usernameReceiver = input("Include the username of the receiver: ")
-        #Channel2 = channel(Server, Client, usernameReceiver)
-        #Channel.send()
-        #login = performNewAction()
-        #clear()
+        usernameReceiver = input("Type the username of the receiver: ")
+        dataSend = input ("Type the path of the .txt to be sent: ")
+        Channel.send(usernameReceiver,dataSend)
+        login = performNewAction()
+        clear()
+    elif action== "read":
+        pathRead = input("Type the path of the .txt to be read: ")
+        pathSignature = input("Type the path of the signature file (.sig) to be verified: ")
+        usernameSender = input("Type the username of the person that sent you the message: ")
+        data = Channel.read(pathRead,pathSignature,usernameSender)
+        if data!=-1:
+            print(data)
+            if data:
+                inp = input("Do you want to store the unencrypted file in a txt file?(Y/n)")
+                if inp=="Y":
+                    inp = input("Name of the file without extension:")
+                    nameFile = inp + ".txt"
+                    with open(nameFile,'wb') as f:
+                        f.write(str(data).encode("utf-8"))
+            
+        else:
+            print("There was an error verifying the signature")
+        login = performNewAction()
+        clear()
     elif action == "add":
         inp = input("Database to access: ").lower()
         if(inp!="users"):
