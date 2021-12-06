@@ -1,20 +1,19 @@
 class channel:
-    def __init__(self, server, client, client2Username = None):
+    def __init__(self, server, client, pki, client2Username = None):
         self.server = server
         self.client = client
         self.clientReceiverUsername = client2Username
+        self.pki = pki
 
     def clientToServer(self,data):
-        clientOutput = self.client.askInformation(data)
-        #TO BE IMPLEMENTED WITH ASYMMETRIC ENCRYPTION, next line is provisional until next delivery
-        serverInput = clientOutput
-        return serverInput
+        pubkey_path = self.pki.retrieve_key("server")
+        clientOutput = self.client.askInformation(data,pubkey_path)
+        return clientOutput
 
     def serverToClient(self, data):
-        serverOutput = self.server.sendInformation(data)
-        #TO BE IMPLEMENTED WITH ASYMMETRIC ENCRYPTION, next line is provisional until next delivery
-        clientInput = serverOutput
-        return clientInput
+        pubkey_path = self.pki.retrieve_key(self.client.username)
+        serverOutput = self.server.sendInformation(data,pubkey_path)
+        return serverOutput
 
     def checkUserExistance(self):
         data = self.client.checkUser()

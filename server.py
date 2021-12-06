@@ -1,6 +1,8 @@
 from encryption_functions import symmetric_enc
 from encryption_functions import gen_symk
 from encryption_functions import symmetric_dec
+from encryption_functions import asymmetric_enc
+from encryption_functions import asymmetric_dec
 import json
 import ast
 import os
@@ -8,7 +10,8 @@ from Crypto.Cipher import AES
 
 class server:
     def __init__(self):
-        self.databaseDecryptKey = open("databaseKey.key","rb").read()
+        self.databaseDecryptKey = open("keys/databaseKey.key","rb").read()
+        self.privateKey_path = "keys/Server/server.pem"
 
     def decryptDatabase(self,database):
         ciphertext = ast.literal_eval(database.get("ciphertext"))
@@ -27,12 +30,14 @@ class server:
         out = {"ciphertext":str(ciphertext),"tag":str(tag),"nonce":str(cipher.nonce)}
         return out
 
-    def sendInformation(self,data):
+    def sendInformation(self,data,publicKey_path):
         encryptedData = symmetric_enc(data)
-        return encryptedData
+        encryptedDataAsym = asymmetric_enc(encryptedData, publicKey_path)
+        return encryptedDataAsym
 
-    def searchInformation(self, dataEncrypted): #Change everything
+    def searchInformation(self, dataEncryptedAsym): #Change everything
         #Function to search the information in the different databases, from an encrypted data.
+        dataEncrypted = asymmetric_dec(dataEncryptedAsym,self.privateKey_path)
         data = symmetric_dec(dataEncrypted)
         fileName = str(data[0])+ ".json"
         if not os.path.exists(fileName):
@@ -48,7 +53,6 @@ class server:
                     pass
                 if err== False:
                     database = self.decryptDatabase(database)
-                #database = self.decryptDatabase(database)
                 f.close()
                 serverOutput = database.get(data[1])
                 if serverOutput:
@@ -68,7 +72,8 @@ class server:
                         return -1
                         
 
-    def storeInformation(self, dataEncrypted, existent):
+    def storeInformation(self, dataEncryptedAsym, existent):
+        dataEncrypted = asymmetric_dec(dataEncryptedAsym,self.privateKey_path)
         data = symmetric_dec(dataEncrypted)
         fileName = str(data[0])+ ".json"
         if not os.path.exists(fileName):
@@ -134,7 +139,8 @@ class server:
                 print("File could not be opened")
 
 
-    def deleteItem(self,dataEncrypted, all=False):
+    def deleteItem(self,dataEncryptedAsym):
+        dataEncrypted = asymmetric_dec(dataEncryptedAsym, self.privateKey_path)
         data = symmetric_dec(dataEncrypted)
         fileName = str(data[0])+ ".json"
         if os.path.exists(fileName):
