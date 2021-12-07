@@ -128,7 +128,7 @@ while login == True:
                 elif inp!="Y" and inp!="y" and inp!="n" and inp!="N":
                     while inp!="Y" and inp!="y" and inp!="n" and inp!="N":
                         inp = input("Invalid input, do you want to store the unencrypted file in a txt file?(y/n)")
-                    if inp=="Y" and inp =="y":
+                    if inp=="Y" or inp =="y":
                         inp = input("Name of the file without extension:")
                         while len(inp)==0:
                             inp = input("Invalid input, introduce the name of the file without extension:")
